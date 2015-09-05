@@ -20,7 +20,7 @@ You can ignore `InterpreterNotFound` if you see any. However you shouldn't see a
 
 Keep code style consistent with the rest of the project. Some suggestions:
 
-1. *Write tests for your new features.* if new_feature else *Write tests for bug-causing scenarios.*
+1. **Write tests for your new features.** `if new_feature else` **Write tests for bug-causing scenarios.**
 2. Write docstrings for all classes, functions, methods, modules, etc.
 3. Document all function/method arguments and return values.
 4. Document all class variables instance variables.
