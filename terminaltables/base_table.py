@@ -177,12 +177,12 @@ class BaseTable(object):
                 final_table_data.append(row)
 
             if i == indexes[-2] and self.inner_footing_row_border:
-                row = join_row(
-                    [self.CHAR_HORIZONTAL * w for w in widths],
+                row = flatten(build_row(
+                    [[self.CHAR_HORIZONTAL * w] for w in widths],
                     self.CHAR_INTERSECT_LEFT if self.outer_border else '',
                     self.CHAR_INTERSECT_CENTER if self.inner_column_border else '',
                     self.CHAR_INTERSECT_RIGHT if self.outer_border else ''
-                )
+                ))
                 final_table_data.append(row)
 
         # Append bottom border.
