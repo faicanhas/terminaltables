@@ -1,20 +1,18 @@
 """Combine cells into rows."""
 
 
-def next_end(iterator):
+def next_end(line):
     """Yield objects in iterator and detect if the current one is the last.
 
-    :param iter iterator: Object to iterate.
+    :param iter line: Object to iterate.
 
     :return: If there are more items and yield current item.
     :rtype: tuple
     """
-    gen = iter(iterator)
-    item = next(gen)
-
+    item = next(line)
     while True:
         try:
-            peek = next(gen)
+            peek = next(line)
         except StopIteration:
             yield False, item
             raise StopIteration
