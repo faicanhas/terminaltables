@@ -1,14 +1,14 @@
 """Combine cells into rows."""
 
 
-def combine(line, left, middle, right):
+def combine(line, left, center, right):
     """Insert borders into list items.
 
     e.g. ('l', 'a', 'm', 'b', 'm', 'c', 'r')
 
     :param iter line: List to iterate.
     :param str left: Left border.
-    :param str middle: Column separator.
+    :param str center: Column separator.
     :param str right: Right border.
 
     :return: Yields combined objects.
@@ -17,13 +17,13 @@ def combine(line, left, middle, right):
     if left:
         yield left
 
-    # Yield items with middle borders.
-    if middle:
+    # Yield items with center borders.
+    if center:
         try:
             for j, i in enumerate(line, start=-len(line) + 1):
                 yield i
                 if j:
-                    yield middle
+                    yield center
         except TypeError:  # Generator.
             try:
                 item = next(line)
@@ -36,7 +36,7 @@ def combine(line, left, middle, right):
                         peek = next(line)
                     except StopIteration:
                         break
-                    yield middle
+                    yield center
                     item = peek
     else:
         for i in line:
@@ -47,22 +47,22 @@ def combine(line, left, middle, right):
         yield right
 
 
-def build_row(cells, left, middle, right):
+def build_row(row, left, center, right):
     """Combine single or multi-lined cells into a single row of list of lists including borders.
 
     Row must already be padded and extended so each cell has the same number of lines.
 
-    :param iter cells: List of cells for one row.
+    :param iter row: List of cells for one row.
     :param str left: Left border.
-    :param str middle: Column separator.
+    :param str center: Column separator.
     :param str right: Right border.
 
     :return: String representation of a row.
     :rtype: list
     """
     combined = list()
-    for row_index in range(len(cells)):
-        combined.append(list(combine((c[row_index] for c in cells), left, middle, right)))
+    for row_index in range(len(row[0])):
+        combined.append(list(combine((c[row_index] for c in row), left, center, right)))
     return combined
 
 
