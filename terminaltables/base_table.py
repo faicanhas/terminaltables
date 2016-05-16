@@ -4,7 +4,7 @@ import re
 
 from terminaltables.build import build_row, flatten
 from terminaltables.terminal_io import terminal_size
-from terminaltables.width_and_alignment import align_and_pad_cell, max_dimensions, visible_width
+from terminaltables.width_and_alignment import align_and_pad_cell, column_max_width, max_dimensions, visible_width
 
 
 def join_row(row, left, middle, right):
@@ -76,14 +76,10 @@ class BaseTable(object):
         :return: The max width of the column.
         :rtype: int
         """
-        widths = self.column_widths
-        borders_padding = (len(widths) * self.padding_left) + (len(widths) * self.padding_right)
-        if self.outer_border:
-            borders_padding += 2
-        if self.inner_column_border and widths:
-            borders_padding += len(widths) - 1
-        other_column_widths = sum(widths) - widths[column_number]
-        return terminal_size()[0] - other_column_widths - borders_padding
+        outer_border = 2 if self.outer_border else 0
+        inner_border = 1 if self.inner_column_border else 0
+        padding = self.padding_left + self.padding_right
+        return column_max_width(self.table_data, column_number, outer_border, inner_border, padding)
 
     @property
     def column_widths(self):
