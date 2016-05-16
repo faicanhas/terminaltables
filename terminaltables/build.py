@@ -1,6 +1,27 @@
 """Combine cells into rows."""
 
 
+def next_end(iterator):
+    """Yield objects in iterator and detect if the current one is the last.
+
+    :param iter iterator: Object to iterate.
+
+    :return: If there are more items and yield current item.
+    :rtype: tuple
+    """
+    gen = iter(iterator)
+    item = next(gen)
+
+    while True:
+        try:
+            peek = next(gen)
+        except StopIteration:
+            yield False, item
+            raise StopIteration
+        yield True, item
+        item = peek
+
+
 def combine(line, left, middle, right):
     """Insert borders into list items.
 
@@ -19,10 +40,16 @@ def combine(line, left, middle, right):
 
     # Yield items with middle borders.
     if middle:
-        for j, i in enumerate(line, start=-len(line) + 1):
-            yield i
-            if j:
-                yield middle
+        try:
+            for j, i in enumerate(line, start=-len(line) + 1):
+                yield i
+                if j:
+                    yield middle
+        except TypeError:  # Generator.
+            for j, i in next_end(line):
+                yield i
+                if j:
+                    yield middle
     else:
         for i in line:
             yield i
