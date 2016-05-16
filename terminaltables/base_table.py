@@ -2,6 +2,7 @@
 
 import re
 
+from terminaltables.build import build_row, flatten
 from terminaltables.terminal_io import terminal_size
 from terminaltables.width_and_alignment import align_and_pad_cell, max_dimensions, visible_width
 
@@ -132,11 +133,11 @@ class BaseTable(object):
         # Append top border.
         max_title = sum(widths) + ((len(widths) - 1) if self.inner_column_border else 0)
         if self.outer_border and self.title and visible_width(self.title) <= max_title:
-            pseudo_row = join_row(
-                ['h' * w for w in widths],
+            pseudo_row = flatten(build_row(
+                [['h' * w] for w in widths],
                 'l', 't' if self.inner_column_border else '',
                 'r'
-            )
+            ))
             pseudo_row_key = dict(h=self.CHAR_HORIZONTAL, l=self.CHAR_CORNER_UPPER_LEFT, t=self.CHAR_INTERSECT_TOP,
                                   r=self.CHAR_CORNER_UPPER_RIGHT)
             pseudo_row_re = re.compile('({0})'.format('|'.join(pseudo_row_key.keys())))
