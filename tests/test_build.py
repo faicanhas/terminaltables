@@ -2,7 +2,7 @@
 
 import pytest
 
-from terminaltables.build import build_row, combine
+from terminaltables.build import build_row, combine, flatten
 
 
 @pytest.mark.parametrize('generator', [False, True])
@@ -109,4 +109,26 @@ def test_build_row_single_empty():
     expected = [
         ['>', '', '<'],
     ]
+    assert actual == expected
+
+
+def test_flatten_one_line():
+    """Test function with one line cells."""
+    table = [
+        ['>', 'Left Cell', '|', 'Center Cell', '|', 'Right Cell', '<'],
+    ]
+    actual = flatten(table)
+    expected = '>Left Cell|Center Cell|Right Cell<'
+    assert actual == expected
+
+
+def test_flatten_two_line():
+    """Test function with two line cells."""
+    table = [
+        ['>', 'Left ', '|', 'Center', '|', 'Right', '<'],
+        ['>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'],
+    ]
+    actual = flatten(table)
+    expected = ('>Left |Center|Right<\n'
+                '>Cell1|Cell2 |Cell3<')
     assert actual == expected
