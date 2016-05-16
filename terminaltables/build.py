@@ -31,12 +31,11 @@ def combine(line, left, middle, right):
                 pass
             else:
                 while True:
+                    yield item
                     try:
                         peek = next(line)
                     except StopIteration:
-                        yield item
                         break
-                    yield item
                     yield middle
                     item = peek
     else:
