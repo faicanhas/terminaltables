@@ -66,8 +66,9 @@ def build_border(column_widths, filler, left, center, right, title=None):
     :return: Prepared border as a tuple of strings.
     :rtype: tuple
     """
-    assert not title  # TODO
-    return tuple(combine((filler * c for c in column_widths), left, center, right))
+    if not title:
+        return tuple(combine((filler * c for c in column_widths), left, center, right))
+    raise NotImplementedError
 
 
 def build_row(row, left, center, right):
