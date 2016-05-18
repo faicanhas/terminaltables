@@ -47,6 +47,23 @@ def combine(line, left, center, right):
         yield right
 
 
+def build_border(column_widths, left, center, right, title=None):
+    """Build the top/bottom/middle row. Optionally embed the table title within the border.
+
+    Title is truncated to fit in between left/right characters.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str center: Column separator.
+    :param str right: Right border.
+    :param str title: Overlay the title on the border between the left and right characters.
+
+    :return: String representation of the border.
+    :rtype: str
+    """
+    raise NotImplementedError
+
+
 def build_row(row, left, center, right):
     """Combine single or multi-lined cells into a single row of list of lists including borders.
 
@@ -57,7 +74,7 @@ def build_row(row, left, center, right):
     :param str center: Column separator.
     :param str right: Right border.
 
-    :return: String representation of a row.
+    :return: String representation of a row (list of strings for each line).
     :rtype: list
     """
     combined = list()
