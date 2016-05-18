@@ -4,7 +4,7 @@
 def combine(line, left, center, right):
     """Insert borders into list items.
 
-    e.g. ('l', 'a', 'm', 'b', 'm', 'c', 'r')
+    e.g. ('l', '1', 'c', '2', 'c', '3', 'r')
 
     :param iter line: List to iterate.
     :param str left: Left border.
@@ -61,6 +61,11 @@ def build_border(column_widths, left, center, right, title=None):
     :return: String representation of the border.
     :rtype: str
     """
+    assert column_widths
+    assert left
+    assert center
+    assert right
+    assert not title
     raise NotImplementedError
 
 
