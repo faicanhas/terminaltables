@@ -10,7 +10,7 @@ def test_one_line():
     ]
     actual = build_row(row, '>', '|', '<')
     expected = [
-        ['>', 'Left Cell', '|', 'Center Cell', '|', 'Right Cell', '<'],
+        ('>', 'Left Cell', '|', 'Center Cell', '|', 'Right Cell', '<'),
     ]
     assert actual == expected
 
@@ -35,8 +35,8 @@ def test_two_line():
     ]
     actual = build_row(row, '>', '|', '<')
     expected = [
-        ['>', 'Left ', '|', 'Center', '|', 'Right', '<'],
-        ['>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'],
+        ('>', 'Left ', '|', 'Center', '|', 'Right', '<'),
+        ('>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'),
     ]
     assert actual == expected
 
@@ -64,9 +64,9 @@ def test_three_line():
     ]
     actual = build_row(row, '>', '|', '<')
     expected = [
-        ['>', 'Left ', '|', 'Center', '|', 'Right', '<'],
-        ['>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'],
-        ['>', '     ', '|', '      ', '|', '     ', '<'],
+        ('>', 'Left ', '|', 'Center', '|', 'Right', '<'),
+        ('>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'),
+        ('>', '     ', '|', '      ', '|', '     ', '<'),
     ]
     assert actual == expected
 
@@ -75,7 +75,7 @@ def test_single():
     """Test with single cell."""
     actual = build_row([['Cell']], '>', '|', '<')
     expected = [
-        ['>', 'Cell', '<'],
+        ('>', 'Cell', '<'),
     ]
     assert actual == expected
 
@@ -84,6 +84,6 @@ def test_empty():
     """Test with empty cell."""
     actual = build_row([['']], '>', '|', '<')
     expected = [
-        ['>', '', '<'],
+        ('>', '', '<'),
     ]
     assert actual == expected

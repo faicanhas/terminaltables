@@ -47,26 +47,27 @@ def combine(line, left, center, right):
         yield right
 
 
-def build_border(column_widths, left, center, right, title=None):
+def build_border(column_widths, filler, left, center, right, title=None):
     """Build the top/bottom/middle row. Optionally embed the table title within the border.
 
     Title is truncated to fit in between left/right characters.
 
+    Example return value:
+    ('<', '-----', '+', '------', '+', '-------', '>')
+    ('<', 'My Table', '----', '+', '------->')
+
     :param iter column_widths: List of integers representing column widths.
+    :param str filler: Character to stretch across each column.
     :param str left: Left border.
     :param str center: Column separator.
     :param str right: Right border.
     :param str title: Overlay the title on the border between the left and right characters.
 
-    :return: String representation of the border.
-    :rtype: str
+    :return: Prepared border as a tuple of strings.
+    :rtype: tuple
     """
-    assert column_widths
-    assert left
-    assert center
-    assert right
-    assert not title
-    raise NotImplementedError
+    assert not title  # TODO
+    return tuple(combine((filler * c for c in column_widths), left, center, right))
 
 
 def build_row(row, left, center, right):
@@ -74,17 +75,23 @@ def build_row(row, left, center, right):
 
     Row must already be padded and extended so each cell has the same number of lines.
 
+    Example return value:
+    [
+        ['>', 'Left ', '|', 'Center', '|', 'Right', '<'],
+        ['>', 'Cell1', '|', 'Cell2 ', '|', 'Cell3', '<'],
+    ]
+
     :param iter row: List of cells for one row.
     :param str left: Left border.
     :param str center: Column separator.
     :param str right: Right border.
 
-    :return: String representation of a row (list of strings for each line).
-    :rtype: list
+    :return: Prepared row as a list of tuple of strings.
+    :rtype: tuple
     """
     combined = list()
     for row_index in range(len(row[0])):
-        combined.append(list(combine((c[row_index] for c in row), left, center, right)))
+        combined.append(tuple(combine((c[row_index] for c in row), left, center, right)))
     return combined
 
 
