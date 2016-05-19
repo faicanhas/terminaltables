@@ -1,3 +1,4 @@
+# coding: utf-8
 """Test function in module."""
 
 import pytest
@@ -15,6 +16,29 @@ from terminaltables.build import truncate
 ])
 def test_ascii(string, max_length, expected_str, expected_len):
     """Test with ASCII characters only.
+
+    :param str string: String to operate on.
+    :param int max_length: Truncate to this size.
+    :param str expected_str: Expected truncated string.
+    :param int expected_len: Expected truncated string size.
+    """
+    actual_str, actual_len = truncate(string, max_length)
+    assert actual_str == expected_str
+    assert actual_len == expected_len
+
+
+@pytest.mark.parametrize('string,max_length,expected_str,expected_len', [
+    ('世界你好', 8, u'世界你好', 8),
+    ('世界你好', 4, u'世界', 4),
+    ('世界你好', 3, u'世', 2),
+    ('a世界你好', 3, u'a世', 3),
+    ('שלום', 4, u'שלום', 4),
+    ('שלום', 3, u'שלו', 3),
+    ('معرب', 4, u'معرب', 4),
+    ('معرب', 3, u'معر', 3),
+])
+def test_cjk_rtl(string, max_length, expected_str, expected_len):
+    """Test with CJK and RTL characters.
 
     :param str string: String to operate on.
     :param int max_length: Truncate to this size.
