@@ -1,5 +1,9 @@
 """Combine cells into rows."""
 
+import unicodedata
+
+from terminaltables.width_and_alignment import RE_COLOR_ANSI
+
 
 def combine(line, left, center, right):
     """Insert borders into list items.
@@ -47,6 +51,43 @@ def combine(line, left, center, right):
         yield right
 
 
+def truncate(string, max_length):
+    """Truncate string to a maximum length. Handles CJK characters.
+
+    :param str string: String to operate on.
+    :param int max_length: Truncate string to this visible size. May truncate to one shorter if CJK in the middle.
+
+    :return: Truncated string and its length (str, int).
+    :rtype: tuple
+    """
+    truncated = list()
+    length = 0
+    done = False
+
+    # Convert to unicode.
+    try:
+        string = string.decode('u8')
+    except (AttributeError, UnicodeEncodeError):
+        pass
+
+    for item in RE_COLOR_ANSI.split(string):
+        if not item:
+            continue
+        if RE_COLOR_ANSI.match(item):
+            truncated.append(item)
+        if done:
+            continue
+        for char in item:
+            width = 2 if unicodedata.east_asian_width(char) in ('F', 'W') else 1
+            if length + width > max_length:
+                done = True
+                break
+            truncated.append(char)
+            length += width
+
+    return ''.join(truncated), length
+
+
 def build_border(column_widths, filler, left, center, right, title=None):
     """Build the top/bottom/middle row. Optionally embed the table title within the border.
 
@@ -68,6 +109,8 @@ def build_border(column_widths, filler, left, center, right, title=None):
     """
     if not title:
         return tuple(combine((filler * c for c in column_widths), left, center, right))
+    # fitted_title, length = truncate(title, sum(column_widths))
+    # columns = [fitted_title]
     raise NotImplementedError
 
 
