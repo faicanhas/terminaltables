@@ -61,6 +61,9 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     ('\x1b[34m世界\x1b[39m', 4, u'\x1b[34m世界\x1b[39m', 4),
     ('\x1b[34m世界\x1b[39m', 2, u'\x1b[34m世\x1b[39m', 2),
     ('\x1b[34m世\x1b[35m界\x1b[39m', 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
+    ('\x1b[34mمعرب\x1b[39m', 4, u'\x1b[34mمعرب\x1b[39m', 4),
+    ('\x1b[34mمعرب\x1b[39m', 2, u'\x1b[34mمع\x1b[39m', 2),
+    ('\x1b[34mم\x1b[35mع\x1b[36mر\x1b[37mب\x1b[39m', 2, u'\x1b[34mم\x1b[35mع\x1b[36m\x1b[37m\x1b[39m', 2),
 
     # colorclass
     (Color('{blue}TEST{/blue}'), 4, '\x1b[34mTEST\x1b[39m', 4),
@@ -69,6 +72,9 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     (Color(u'{blue}世界{/blue}'), 4, u'\x1b[34m世界\x1b[39m', 4),
     (Color(u'{blue}世界{/blue}'), 2, u'\x1b[34m世\x1b[39m', 2),
     (Color(u'{blue}世{magenta}界{/magenta}'), 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
+    (Color(u'{blue}معرب{/blue}'), 4, u'\x1b[34mمعرب\x1b[39m', 4),
+    (Color(u'{blue}معرب{/blue}'), 2, u'\x1b[34mمع\x1b[39m', 2),
+    (Color(u'{blue}م{magenta}ع{cyan}ر{white}ب{/blue}'), 2, u'\x1b[34mم\x1b[35mع\x1b[36m\x1b[37m\x1b[39m', 2),
 
     # colorama
     (Fore.BLUE + 'TEST' + Fore.RESET, 4, '\x1b[34mTEST\x1b[39m', 4),
