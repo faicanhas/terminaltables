@@ -4,6 +4,7 @@
 import pytest
 from colorama import Fore
 from colorclass import Color
+from termcolor import colored
 
 from terminaltables.build import truncate
 
@@ -67,7 +68,7 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     (Color('{blue}T{magenta}E{cyan}S{white}T{/blue}'), 2, '\x1b[34mT\x1b[35mE\x1b[36m\x1b[37m\x1b[39m', 2),
     (Color(u'{blue}世界{/blue}'), 4, u'\x1b[34m世界\x1b[39m', 4),
     (Color(u'{blue}世界{/blue}'), 2, u'\x1b[34m世\x1b[39m', 2),
-    (Color(u'{blue}世{magenta}界{/blue}'), 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
+    (Color(u'{blue}世{magenta}界{/magenta}'), 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
 
     # colorama
     (Fore.BLUE + 'TEST' + Fore.RESET, 4, '\x1b[34mTEST\x1b[39m', 4),
@@ -80,6 +81,18 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     (Fore.BLUE + '世界' + Fore.RESET, 4, u'\x1b[34m世界\x1b[39m', 4),
     (Fore.BLUE + '世界' + Fore.RESET, 2, u'\x1b[34m世\x1b[39m', 2),
     (Fore.BLUE + '世' + Fore.MAGENTA + '界' + Fore.RESET, 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
+
+    # termcolor
+    (colored('TEST', 'blue'), 4, '\x1b[34mTEST\x1b[0m', 4),
+    (colored('TEST', 'blue'), 2, '\x1b[34mTE\x1b[0m', 2),
+    (
+        colored('T', 'blue') + colored('E', 'magenta') + colored('S', 'cyan') + colored('T', 'white'),
+        2,
+        '\x1b[34mT\x1b[0m\x1b[35mE\x1b[0m\x1b[36m\x1b[0m\x1b[37m\x1b[0m', 2
+    ),
+    (colored('世界', 'blue'), 4, u'\x1b[34m世界\x1b[0m', 4),
+    (colored('世界', 'blue'), 2, u'\x1b[34m世\x1b[0m', 2),
+    (colored('世', 'blue') + colored('界', 'magenta'), 2, u'\x1b[34m世\x1b[0m\x1b[35m\x1b[0m', 2),
 ])
 def test_colors(string, max_length, expected_str, expected_len):
     """Test with color characters.
