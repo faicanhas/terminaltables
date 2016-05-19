@@ -75,6 +75,7 @@ def truncate(string, max_length):
             continue
         if RE_COLOR_ANSI.match(item):
             truncated.append(item)
+            continue
         if done:
             continue
         for char in item:
