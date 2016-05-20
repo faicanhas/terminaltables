@@ -88,6 +88,14 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     (Fore.BLUE + '世界' + Fore.RESET, 4, u'\x1b[34m世界\x1b[39m', 4),
     (Fore.BLUE + '世界' + Fore.RESET, 2, u'\x1b[34m世\x1b[39m', 2),
     (Fore.BLUE + '世' + Fore.MAGENTA + '界' + Fore.RESET, 2, u'\x1b[34m世\x1b[35m\x1b[39m', 2),
+    (Fore.BLUE + 'معرب' + Fore.RESET, 4, u'\x1b[34mمعرب\x1b[39m', 4),
+    (Fore.BLUE + 'معرب' + Fore.RESET, 2, u'\x1b[34mمع\x1b[39m', 2),
+    (
+        Fore.BLUE + 'م' + Fore.MAGENTA + 'ع' + Fore.CYAN + 'ر' + Fore.WHITE + 'ب' + Fore.RESET,
+        2,
+        u'\x1b[34mم\x1b[35mع\x1b[36m\x1b[37m\x1b[39m',
+        2
+    ),
 
     # termcolor
     (colored('TEST', 'blue'), 4, '\x1b[34mTEST\x1b[0m', 4),
