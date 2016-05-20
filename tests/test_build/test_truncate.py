@@ -99,6 +99,8 @@ def test_cjk_rtl(string, max_length, expected_str, expected_len):
     (colored('世界', 'blue'), 4, u'\x1b[34m世界\x1b[0m', 4),
     (colored('世界', 'blue'), 2, u'\x1b[34m世\x1b[0m', 2),
     (colored('世', 'blue') + colored('界', 'magenta'), 2, u'\x1b[34m世\x1b[0m\x1b[35m\x1b[0m', 2),
+    (colored('معرب', 'blue'), 4, u'\x1b[34mمعرب\x1b[0m', 4),
+    (colored('معرب', 'blue'), 2, u'\x1b[34mمع\x1b[0m', 2),
 ])
 def test_colors(string, max_length, expected_str, expected_len):
     """Test with color characters.
