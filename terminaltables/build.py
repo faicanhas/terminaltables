@@ -108,10 +108,15 @@ def build_border(column_widths, filler, left, center, right, title=None):
     :return: Prepared border as a tuple of strings.
     :rtype: tuple
     """
-    if not title:
+    if not title or not column_widths:
         return tuple(combine((filler * c for c in column_widths), left, center, right))
-    # fitted_title, length = truncate(title, sum(column_widths))
-    # columns = [fitted_title]
+
+    fitted_title, length = truncate(title, sum(column_widths) + len(filler) * (len(column_widths) - 1))
+    if length <= column_widths[0]:
+        fitted_title += filler * (column_widths[0] - length)
+        return tuple(combine([fitted_title] + [filler * c for c in column_widths[1:]], left, center, right))
+
+    # add to length while iterating column_widths? Also add to columns below?
     raise NotImplementedError
 
 
