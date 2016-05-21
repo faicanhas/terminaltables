@@ -80,6 +80,8 @@ def test_first_column_fit(column_widths, left, center, right, expected):
     ([1, 1], 'Ap'),
     ([1, 0], 'A'),
     ([0, 0], ''),
+    ([1], 'A'),
+    ([0], ''),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_no_center(column_widths, left, right, expected):
@@ -135,33 +137,6 @@ def test_center(column_widths, left, right, expected):
         expected = left + expected + right
     actual = build_border(column_widths, '-', left, '+', right, title='Applications')
     assert ''.join(actual) == expected
-
-
-@pytest.mark.skipif('True')
-@pytest.mark.parametrize('column_widths,filler,left,center,right,expected', [
-    [(9, 8, 7), '-', '<', '+', '>', ('<', 'My Table-', '+', '--------', '+', '-------', '>')],
-    [(8, 8, 7), '-', '<', '+', '>', ('<', 'My Table', '+', '--------', '+', '-------', '>')],
-    # [(5, 6, 7), '-', '<', '+', '>', ('<', 'My Table', '----', '+', '-------', '>')],
-    # [(3, 3, 3), '-', '<', '+', '>', ('<', 'My Table', '---', '>')],
-    # [(3, 3, 3), '-', '<', '', '>', ('<', 'My Table', '>')],
-    # [(2, 2, 2), '-', '<', '+', '>', ('<', 'My Table', '>')],
-    # [(1, 1, 1), '-', '', '', '', ('My ',)],
-    # [(1, 1, 1), '', '', '', '', ('',)],
-    [(1,), '-', '<', '+', '>', ('<', 'M', '>')],
-    [(), '-', '<', '+', '>', ('<', '>')],
-])
-def test_ascii(column_widths, filler, left, center, right, expected):
-    """Test with regular ASCII title.
-
-    :param iter column_widths: List of integers representing column widths.
-    :param str filler: Character to stretch across each column.
-    :param str left: Left border.
-    :param str center: Column separator.
-    :param str right: Right border.
-    :param str expected: Expected output.
-    """
-    actual = build_border(column_widths, filler, left, center, right, title='My Table')
-    assert actual == expected
 
 
 @pytest.mark.skipif('True')
