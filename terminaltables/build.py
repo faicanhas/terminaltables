@@ -74,8 +74,10 @@ def build_border(column_widths, filler, left, center, right, title=None):
     fitted_title, length = truncate(title, sum(column_widths) + len(center) * (len(column_widths) - 1))
     columns = list()
 
-    for width in column_widths:
-        if length < 1:  # Title is done.
+    for width in combine(column_widths, None, bool(center), None):
+        if width is True:  # Center character.
+            length -= 1
+        elif length < 1:  # Title is done.
             columns.append(filler * width)
         elif not width:  # 0 character column.
             continue
