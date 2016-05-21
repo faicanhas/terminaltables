@@ -2,6 +2,9 @@
 """Test function in module."""
 
 import pytest
+from colorama import Fore, Style
+from colorclass import Color
+from termcolor import colored
 
 from terminaltables.build import build_border
 
@@ -260,7 +263,44 @@ def test_rtl(column_widths, left, center, right, expected):
     assert ''.join(actual) == expected
 
 
-@pytest.mark.skipif('True')
-def test_colors():
-    """Test with color title characters."""
-    pass
+@pytest.mark.parametrize('column_widths,center,expected', [
+    ([12], '+', '\x1b[34mTEST\x1b[0m--------'),
+    ([12], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([7, 5], '+', '\x1b[34mTEST\x1b[0m---+-----'),
+    ([7, 5], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([4], '+', '\x1b[34mTEST\x1b[0m'),
+    ([4], '', '\x1b[34mTEST\x1b[0m'),
+    ([4, 1], '+', '\x1b[34mTEST\x1b[0m+-'),
+    ([4, 1], '', '\x1b[34mTEST\x1b[0m-'),
+    ([4, 0], '+', '\x1b[34mTEST\x1b[0m+'),
+    ([4, 0], '', '\x1b[34mTEST\x1b[0m'),
+    ([12], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([6, 6], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([3, 3, 3, 3], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([2, 1, 2, 1, 2, 1, 2, 1], '', '\x1b[34mTEST\x1b[0m--------'),
+    ([1] * 12, '', '\x1b[34mTEST\x1b[0m--------'),
+    ([2, 4], '', '\x1b[34mTEST\x1b[0m--'),
+    ([1, 4], '', '\x1b[34mTEST\x1b[0m-'),
+    ([1, 3], '', '\x1b[34mTEST\x1b[0m'),
+])
+@pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
+@pytest.mark.parametrize('title', [
+    '\x1b[34mTEST\x1b[0m',
+    Color('{blue}TEST{/all}'),
+    Fore.BLUE + 'TEST' + Style.RESET_ALL,
+    colored('TEST', 'blue'),
+])
+def test_colors(column_widths, left, center, right, title, expected):
+    """Test with color title characters.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str center: Column separator.
+    :param str right: Right border.
+    :param title: Title in border with color codes.
+    :param str expected: Expected output.
+    """
+    if left and right:
+        expected = left + expected + right
+    actual = build_border(column_widths, '-', left, center, right, title=title)
+    assert ''.join(actual) == expected
