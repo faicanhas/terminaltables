@@ -154,6 +154,8 @@ def test_center(column_widths, left, right, expected):
     ([12], '', u'蓝色--------'),
     ([6, 6], '', u'蓝色--------'),
     ([3, 3, 3, 3], '', u'蓝色--------'),
+    ([2, 1, 2, 1, 2, 1, 2, 1], '', u'蓝色--------'),
+    ([1] * 12, '', u'蓝色--------'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_cjk_even(column_widths, left, center, right, expected):
