@@ -1,19 +1,17 @@
 """Combine cells into rows."""
 
-import unicodedata
-
-from terminaltables.width_and_alignment import RE_COLOR_ANSI
+from terminaltables.width_and_alignment import truncate
 
 
 def combine(line, left, center, right):
-    """Insert borders into list items.
+    """Zip borders between list items.
 
     e.g. ('l', '1', 'c', '2', 'c', '3', 'r')
 
     :param iter line: List to iterate.
-    :param str left: Left border.
-    :param str center: Column separator.
-    :param str right: Right border.
+    :param left: Left border.
+    :param center: Column separator.
+    :param right: Right border.
 
     :return: Yields combined objects.
     """
@@ -51,44 +49,6 @@ def combine(line, left, center, right):
         yield right
 
 
-def truncate(string, max_length):
-    """Truncate string to a maximum length. Handles CJK characters.
-
-    :param str string: String to operate on.
-    :param int max_length: Truncate string to this visible size. May truncate to one shorter if CJK in the middle.
-
-    :return: Truncated string and its length (str, int).
-    :rtype: tuple
-    """
-    truncated = list()
-    length = 0
-    done = False
-
-    # Convert to unicode.
-    try:
-        string = string.decode('u8')
-    except (AttributeError, UnicodeEncodeError):
-        pass
-
-    for item in RE_COLOR_ANSI.split(string):
-        if not item:
-            continue
-        if RE_COLOR_ANSI.match(item):
-            truncated.append(item)
-            continue
-        if done:
-            continue
-        for char in item:
-            width = 2 if unicodedata.east_asian_width(char) in ('F', 'W') else 1
-            if length + width > max_length:
-                done = True
-                break
-            truncated.append(char)
-            length += width
-
-    return ''.join(truncated), length
-
-
 def build_border(column_widths, filler, left, center, right, title=None):
     """Build the top/bottom/middle row. Optionally embed the table title within the border.
 
@@ -112,12 +72,20 @@ def build_border(column_widths, filler, left, center, right, title=None):
         return tuple(combine((filler * c for c in column_widths), left, center, right))
 
     fitted_title, length = truncate(title, sum(column_widths) + len(filler) * (len(column_widths) - 1))
-    if length <= column_widths[0]:
-        fitted_title += filler * (column_widths[0] - length)
-        return tuple(combine([fitted_title] + [filler * c for c in column_widths[1:]], left, center, right))
+    columns = list()
 
-    # add to length while iterating column_widths? Also add to columns below?
-    raise NotImplementedError
+    for width in combine(column_widths, None, bool(center), None):  # Using combine() to "zip" center spacing.
+        if width is True:  # center.
+            if not columns:  # Title not appended yet.
+                length -= 1
+        elif not columns and length >= width:  # Column too narrow.
+            length -= width
+        elif not columns:  # Title not appended, it's time.
+            columns.append(fitted_title + filler * (width - length))
+        else:
+            columns.append(filler * width)
+
+    return tuple(combine(columns, left, center, right))
 
 
 def build_row(row, left, center, right):

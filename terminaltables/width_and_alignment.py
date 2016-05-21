@@ -39,6 +39,44 @@ def visible_width(string):
     return width
 
 
+def truncate(string, max_length):
+    """Truncate string to a maximum length. Handles CJK characters.
+
+    :param str string: String to operate on.
+    :param int max_length: Truncate string to this visible size. May truncate to one shorter if CJK in the middle.
+
+    :return: Truncated string and its length (str, int).
+    :rtype: tuple
+    """
+    truncated = list()
+    length = 0
+    done = False
+
+    # Convert to unicode.
+    try:
+        string = string.decode('u8')
+    except (AttributeError, UnicodeEncodeError):
+        pass
+
+    for item in RE_COLOR_ANSI.split(string):
+        if not item:
+            continue
+        if RE_COLOR_ANSI.match(item):
+            truncated.append(item)
+            continue
+        if done:
+            continue
+        for char in item:
+            width = 2 if unicodedata.east_asian_width(char) in ('F', 'W') else 1
+            if length + width > max_length:
+                done = True
+                break
+            truncated.append(char)
+            length += width
+
+    return ''.join(truncated), length
+
+
 def align_and_pad_cell(string, align, dimensions, padding, space=' '):
     """Align a string horizontally and vertically. Also add additional padding in both dimensions.
 

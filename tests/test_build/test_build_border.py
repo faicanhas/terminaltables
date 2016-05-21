@@ -26,6 +26,25 @@ def test_no_title(column_widths, filler, left, center, right, expected):
     assert actual == expected
 
 
+@pytest.mark.parametrize('column_widths,expected', [
+    ([20], 'Applications--------'),
+])
+@pytest.mark.parametrize('left,right', [('<', '>'), ('', '')])
+def test_no_center(column_widths, left, right, expected):
+    """Test with no column dividers.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str right: Right border.
+    :param str expected: Expected output.
+    """
+    if left and right:
+        expected = left + expected + right
+    actual = build_border(column_widths, '-', left, '', right, title='Applications')
+    assert ''.join(actual) == expected
+
+
+@pytest.mark.skipif('True')
 @pytest.mark.parametrize('column_widths,filler,left,center,right,expected', [
     [(9, 8, 7), '-', '<', '+', '>', ('<', 'My Table-', '+', '--------', '+', '-------', '>')],
     [(8, 8, 7), '-', '<', '+', '>', ('<', 'My Table', '+', '--------', '+', '-------', '>')],

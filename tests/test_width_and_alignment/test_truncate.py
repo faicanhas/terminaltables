@@ -6,7 +6,7 @@ from colorama import Fore
 from colorclass import Color
 from termcolor import colored
 
-from terminaltables.build import truncate
+from terminaltables.width_and_alignment import truncate
 
 
 @pytest.mark.parametrize('string,max_length,expected_str,expected_len', [
