@@ -26,32 +26,23 @@ def test_no_title(column_widths, filler, left, center, right, expected):
     assert ''.join(actual) == expected
 
 
-@pytest.mark.parametrize('column_widths,left,center,right,expected', [
-    ([20], '<', '+', '>', '<Applications-------->'),
-    ([20], '', '+', '', 'Applications--------'),
-    ([20], '<', '', '>', '<Applications-------->'),
-    ([20], '', '', '', 'Applications--------'),
+@pytest.mark.parametrize('column_widths,center,expected', [
+    ([20], '+', 'Applications--------'),
+    ([20], '', 'Applications--------'),
 
-    ([15, 5], '<', '+', '>', '<Applications---+----->'),
-    ([15, 5], '', '+', '', 'Applications---+-----'),
-    ([15, 5], '<', '', '>', '<Applications-------->'),
-    ([15, 5], '', '', '', 'Applications--------'),
+    ([15, 5], '+', 'Applications---+-----'),
+    ([15, 5], '', 'Applications--------'),
 
-    ([12], '<', '+', '>', '<Applications>'),
-    ([12], '', '+', '', 'Applications'),
-    ([12], '<', '', '>', '<Applications>'),
-    ([12], '', '', '', 'Applications'),
+    ([12], '+', 'Applications'),
+    ([12], '', 'Applications'),
 
-    ([12, 1], '<', '+', '>', '<Applications+->'),
-    ([12, 1], '', '+', '', 'Applications+-'),
-    ([12, 1], '<', '', '>', '<Applications->'),
-    ([12, 1], '', '', '', 'Applications-'),
+    ([12, 1], '+', 'Applications+-'),
+    ([12, 1], '', 'Applications-'),
 
-    ([12, 0], '<', '+', '>', '<Applications+>'),
-    ([12, 0], '', '+', '', 'Applications+'),
-    ([12, 0], '<', '', '>', '<Applications>'),
-    ([12, 0], '', '', '', 'Applications'),
+    ([12, 0], '+', 'Applications+'),
+    ([12, 0], '', 'Applications'),
 ])
+@pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_first_column_fit(column_widths, left, center, right, expected):
     """Test with title that fits in the first column.
 
@@ -61,6 +52,8 @@ def test_first_column_fit(column_widths, left, center, right, expected):
     :param str right: Right border.
     :param str expected: Expected output.
     """
+    if left and right:
+        expected = left + expected + right
     actual = build_border(column_widths, '-', left, center, right, title='Applications')
     assert ''.join(actual) == expected
 
