@@ -6,11 +6,11 @@ from terminaltables.build import build_border
 
 
 @pytest.mark.parametrize('column_widths,filler,left,center,right,expected', [
-    [(5, 6, 7), '-', '<', '+', '>', ('<', '-----', '+', '------', '+', '-------', '>')],
-    [(1, 1, 1), '-', '', '', '', ('-', '-', '-')],
-    [(1, 1, 1), '', '', '', '', ('', '', '')],
-    [(1,), '-', '<', '+', '>', ('<', '-', '>')],
-    [(), '-', '<', '+', '>', ('<', '>')],
+    ([5, 6, 7], '-', '<', '+', '>', '<-----+------+------->'),
+    ([1, 1, 1], '-', '', '', '', '---'),
+    ([1, 1, 1], '', '', '', '', ''),
+    ([1], '-', '<', '+', '>', '<->'),
+    ([], '-', '<', '+', '>', '<>'),
 ])
 def test_no_title(column_widths, filler, left, center, right, expected):
     """Test without title.
@@ -23,7 +23,46 @@ def test_no_title(column_widths, filler, left, center, right, expected):
     :param str expected: Expected output.
     """
     actual = build_border(column_widths, filler, left, center, right)
-    assert actual == expected
+    assert ''.join(actual) == expected
+
+
+@pytest.mark.parametrize('column_widths,left,center,right,expected', [
+    ([20], '<', '+', '>', '<Applications-------->'),
+    ([20], '', '+', '', 'Applications--------'),
+    ([20], '<', '', '>', '<Applications-------->'),
+    ([20], '', '', '', 'Applications--------'),
+
+    ([15, 5], '<', '+', '>', '<Applications---+----->'),
+    ([15, 5], '', '+', '', 'Applications---+-----'),
+    ([15, 5], '<', '', '>', '<Applications-------->'),
+    ([15, 5], '', '', '', 'Applications--------'),
+
+    ([12], '<', '+', '>', '<Applications>'),
+    ([12], '', '+', '', 'Applications'),
+    ([12], '<', '', '>', '<Applications>'),
+    ([12], '', '', '', 'Applications'),
+
+    ([12, 1], '<', '+', '>', '<Applications+->'),
+    ([12, 1], '', '+', '', 'Applications+-'),
+    ([12, 1], '<', '', '>', '<Applications->'),
+    ([12, 1], '', '', '', 'Applications-'),
+
+    ([12, 0], '<', '+', '>', '<Applications+>'),
+    ([12, 0], '', '+', '', 'Applications+'),
+    ([12, 0], '<', '', '>', '<Applications>'),
+    ([12, 0], '', '', '', 'Applications'),
+])
+def test_first_column_fit(column_widths, left, center, right, expected):
+    """Test with title that fits in the first column.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str center: Column separator.
+    :param str right: Right border.
+    :param str expected: Expected output.
+    """
+    actual = build_border(column_widths, '-', left, center, right, title='Applications')
+    assert ''.join(actual) == expected
 
 
 @pytest.mark.parametrize('column_widths,expected', [
