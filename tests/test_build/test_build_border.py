@@ -282,6 +282,9 @@ def test_rtl(column_widths, left, center, right, expected):
     ([2, 4], '', '\x1b[34mTEST\x1b[0m--'),
     ([1, 4], '', '\x1b[34mTEST\x1b[0m-'),
     ([1, 3], '', '\x1b[34mTEST\x1b[0m'),
+    ([1, 2], '', '\x1b[34mTES\x1b[0m'),
+    ([1, 1], '', '\x1b[34mTE\x1b[0m'),
+    ([1, 0], '', '\x1b[34mT\x1b[0m'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 @pytest.mark.parametrize('title', [
