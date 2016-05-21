@@ -28,8 +28,28 @@ def test_no_title(column_widths, filler, left, center, right, expected):
 
 @pytest.mark.parametrize('column_widths,expected', [
     ([20], 'Applications--------'),
+    ([10, 10], 'Applications--------'),
+    ([5, 5, 5, 5], 'Applications--------'),
+    ([3, 2, 3, 2, 3, 2, 3, 2], 'Applications--------'),
+    ([1] * 20, 'Applications--------'),
+    ([10, 5], 'Applications---'),
+    ([9, 5], 'Applications--'),
+    ([8, 5], 'Applications-'),
+    ([7, 5], 'Applications'),
+    # ([6, 5], 'Application'),
+    # ([5, 5], 'Applicatio'),
+    # ([5, 4], 'Applicati'),
+    # ([4, 4], 'Applicat'),
+    # ([4, 3], 'Applica'),
+    # ([3, 3], 'Applic'),
+    # ([3, 2], 'Appli'),
+    # ([2, 2], 'Appl'),
+    # ([2, 1], 'App'),
+    # ([1, 1], 'Ap'),
+    # ([1, 0], 'A'),
+    # ([0, 0], ''),
 ])
-@pytest.mark.parametrize('left,right', [('<', '>'), ('', '')])
+@pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_no_center(column_widths, left, right, expected):
     """Test with no column dividers.
 

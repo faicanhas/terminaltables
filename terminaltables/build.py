@@ -74,16 +74,16 @@ def build_border(column_widths, filler, left, center, right, title=None):
     fitted_title, length = truncate(title, sum(column_widths) + len(filler) * (len(column_widths) - 1))
     columns = list()
 
-    for width in combine(column_widths, None, bool(center), None):  # Using combine() to "zip" center spacing.
-        if width is True:  # center.
-            if not columns:  # Title not appended yet.
-                length -= 1
-        elif not columns and length >= width:  # Column too narrow.
-            length -= width
-        elif not columns:  # Title not appended, it's time.
-            columns.append(fitted_title + filler * (width - length))
-        else:
+    for width in column_widths:
+        if length < 1:  # Title is done.
             columns.append(filler * width)
+        elif not width:  # 0 character column.
+            continue
+        elif width >= length:  # Concatenate fillers to title.
+            columns.append(fitted_title + filler * (width - length))
+            length = 0
+        else:  # Column too narrow.
+            length -= width
 
     return tuple(combine(columns, left, center, right))
 
