@@ -1,3 +1,4 @@
+# coding: utf-8
 """Test function in module."""
 
 import pytest
@@ -139,10 +140,33 @@ def test_center(column_widths, left, right, expected):
     assert ''.join(actual) == expected
 
 
-@pytest.mark.skipif('True')
-def test_cjk():
-    """Test with CJK characters in title."""
-    pass
+@pytest.mark.parametrize('column_widths,center,expected', [
+    ([12], '+', u'蓝色--------'),
+    ([12], '', u'蓝色--------'),
+    ([7, 5], '+', u'蓝色---+-----'),
+    ([7, 5], '', u'蓝色--------'),
+    ([4], '+', u'蓝色'),
+    ([4], '', u'蓝色'),
+    ([4, 1], '+', u'蓝色+-'),
+    ([4, 1], '', u'蓝色-'),
+    ([4, 0], '+', u'蓝色+'),
+    ([4, 0], '', u'蓝色'),
+    ([12], '', u'蓝色--------'),
+])
+@pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
+def test_cjk_even(column_widths, left, center, right, expected):
+    """Test with CJK characters in title with even number of visible spaces.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str center: Column separator.
+    :param str right: Right border.
+    :param str expected: Expected output.
+    """
+    if left and right:
+        expected = left + expected + right
+    actual = build_border(column_widths, '-', left, center, right, title='蓝色')
+    assert ''.join(actual) == expected
 
 
 @pytest.mark.skipif('True')
