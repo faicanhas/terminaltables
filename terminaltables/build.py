@@ -80,23 +80,26 @@ def build_border(column_widths, filler, left, center, right, title=None):
         return tuple(combine(columns, left, center, right))
 
     # Handle wide titles/narrow columns.
-    columns = list()
+    columns_and_centers = [title]
     for width in combine(column_widths, None, bool(center), None):
-        if width is True:  # Center character.
-            length -= 1
-            if length == 0:  # Title fits with center character.
-                columns.append(title)
-        elif length < 1:  # Title is done.
-            columns.append(filler * width)
-        elif not width:  # 0 character column.
-            continue
-        elif width >= length:  # Concatenate fillers to title.
-            columns.append(title + filler * (width - length))
+        # If title is taken care of.
+        if length < 1:
+            columns_and_centers.append(center if width is True else filler * width)
+        # If title's last character overrides a center character.
+        elif width is True and length == 1:
             length = 0
-        else:  # Column too narrow.
+        # If this is a center character that is overridden by the title.
+        elif width is True:
+            length -= 1
+        # If title's last character is within a column.
+        elif width >= length:
+            columns_and_centers[0] += filler * (width - length)  # Append filler chars to title.
+            length = 0
+        # If remainder of title won't fit in a column.
+        else:
             length -= width
 
-    return tuple(combine(columns, left, center, right))
+    return tuple(combine(columns_and_centers, left, None, right))
 
 
 def build_row(row, left, center, right):
