@@ -200,10 +200,23 @@ def test_cjk(column_widths, left, center, right, expected):
     assert ''.join(actual) == expected
 
 
-@pytest.mark.skipif('True')
-def test_rtl():
-    """Test with RTL characters in title."""
-    pass
+@pytest.mark.parametrize('column_widths,center,expected', [
+    ([12], '+', u'معرب--------'),
+])
+@pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
+def test_rtl(column_widths, left, center, right, expected):
+    """Test with RTL characters in title.
+
+    :param iter column_widths: List of integers representing column widths.
+    :param str left: Left border.
+    :param str center: Column separator.
+    :param str right: Right border.
+    :param str expected: Expected output.
+    """
+    if left and right:
+        expected = left + expected + right
+    actual = build_border(column_widths, '-', left, center, right, title='معرب')
+    assert ''.join(actual) == expected
 
 
 @pytest.mark.skipif('True')
