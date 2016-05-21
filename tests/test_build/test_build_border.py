@@ -117,6 +117,10 @@ def test_no_center(column_widths, left, right, expected):
     ([2, 2, 2, 2, 2, 2, 2], 'Applications--+--+--'),
     ([1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'Applications-+-+-+-'),
     ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'Applications++++++++'),
+
+    ([2, 2, 2, 2], 'Application'),
+    ([1, 1, 1, 1, 1], 'Applicati'),
+    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'Applicati'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_center(column_widths, left, right, expected):
