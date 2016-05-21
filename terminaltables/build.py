@@ -71,7 +71,7 @@ def build_border(column_widths, filler, left, center, right, title=None):
     if not title or not column_widths:
         return tuple(combine((filler * c for c in column_widths), left, center, right))
 
-    fitted_title, length = truncate(title, sum(column_widths) + len(filler) * (len(column_widths) - 1))
+    fitted_title, length = truncate(title, sum(column_widths) + len(center) * (len(column_widths) - 1))
     columns = list()
 
     for width in column_widths:
