@@ -3,14 +3,14 @@
 from terminaltables.width_and_alignment import truncate
 
 
-def combine(line, left, center, right):
+def combine(line, left, intersect, right):
     """Zip borders between list items.
 
     e.g. ('l', '1', 'c', '2', 'c', '3', 'r')
 
     :param iter line: List to iterate.
     :param left: Left border.
-    :param center: Column separator.
+    :param intersect: Column separator.
     :param right: Right border.
 
     :return: Yields combined objects.
@@ -19,13 +19,13 @@ def combine(line, left, center, right):
     if left:
         yield left
 
-    # Yield items with center borders.
-    if center:
+    # Yield items with intersect characters.
+    if intersect:
         try:
             for j, i in enumerate(line, start=-len(line) + 1):
                 yield i
                 if j:
-                    yield center
+                    yield intersect
         except TypeError:  # Generator.
             try:
                 item = next(line)
@@ -38,7 +38,7 @@ def combine(line, left, center, right):
                         peek = next(line)
                     except StopIteration:
                         break
-                    yield center
+                    yield intersect
                     item = peek
     else:
         for i in line:
@@ -49,7 +49,7 @@ def combine(line, left, center, right):
         yield right
 
 
-def build_border(column_widths, filler, left, center, right, title=None):
+def build_border(column_widths, filler, left, intersect, right, title=None):
     """Build the top/bottom/middle row. Optionally embed the table title within the border.
 
     Title is truncated to fit in between left/right characters.
@@ -61,7 +61,7 @@ def build_border(column_widths, filler, left, center, right, title=None):
     :param iter column_widths: List of integers representing column widths.
     :param str filler: Character to stretch across each column.
     :param str left: Left border.
-    :param str center: Column separator.
+    :param str intersect: Column separator.
     :param str right: Right border.
     :param str title: Overlay the title on the border between the left and right characters.
 
@@ -69,40 +69,40 @@ def build_border(column_widths, filler, left, center, right, title=None):
     :rtype: tuple
     """
     if not title or not column_widths or not filler:
-        return tuple(combine((filler * c for c in column_widths), left, center, right))
-    title, length = truncate(title, sum(column_widths) + len(center) * (len(column_widths) - 1))
+        return tuple(combine((filler * c for c in column_widths), left, intersect, right))
+    title, length = truncate(title, sum(column_widths) + len(intersect) * (len(column_widths) - 1))
 
     # Handle title fitting in the first column.
     if length == column_widths[0]:
-        return tuple(combine([title] + [filler * c for c in column_widths[1:]], left, center, right))
+        return tuple(combine([title] + [filler * c for c in column_widths[1:]], left, intersect, right))
     if length < column_widths[0]:
         columns = [title + filler * (column_widths[0] - length)] + [filler * c for c in column_widths[1:]]
-        return tuple(combine(columns, left, center, right))
+        return tuple(combine(columns, left, intersect, right))
 
     # Handle wide titles/narrow columns.
-    columns_and_centers = [title]
-    for width in combine(column_widths, None, bool(center), None):
+    columns_and_intersects = [title]
+    for width in combine(column_widths, None, bool(intersect), None):
         # If title is taken care of.
         if length < 1:
-            columns_and_centers.append(center if width is True else filler * width)
-        # If title's last character overrides a center character.
+            columns_and_intersects.append(intersect if width is True else filler * width)
+        # If title's last character overrides an intersect character.
         elif width is True and length == 1:
             length = 0
-        # If this is a center character that is overridden by the title.
+        # If this is an intersect character that is overridden by the title.
         elif width is True:
             length -= 1
         # If title's last character is within a column.
         elif width >= length:
-            columns_and_centers[0] += filler * (width - length)  # Append filler chars to title.
+            columns_and_intersects[0] += filler * (width - length)  # Append filler chars to title.
             length = 0
         # If remainder of title won't fit in a column.
         else:
             length -= width
 
-    return tuple(combine(columns_and_centers, left, None, right))
+    return tuple(combine(columns_and_intersects, left, None, right))
 
 
-def build_row(row, left, center, right):
+def build_row(row, left, intersect, right):
     """Combine single or multi-lined cells into a single row of list of lists including borders.
 
     Row must already be padded and extended so each cell has the same number of lines.
@@ -115,7 +115,7 @@ def build_row(row, left, center, right):
 
     :param iter row: List of cells for one row.
     :param str left: Left border.
-    :param str center: Column separator.
+    :param str intersect: Column separator.
     :param str right: Right border.
 
     :return: Prepared row as a list of tuple of strings.
@@ -123,7 +123,7 @@ def build_row(row, left, center, right):
     """
     combined = list()
     for row_index in range(len(row[0])):
-        combined.append(tuple(combine((c[row_index] for c in row), left, center, right)))
+        combined.append(tuple(combine((c[row_index] for c in row), left, intersect, right)))
     return combined
 
 
