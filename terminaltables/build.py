@@ -4,7 +4,7 @@ from terminaltables.width_and_alignment import truncate
 
 
 def combine(line, left, intersect, right):
-    """Zip borders between list items.
+    """Zip borders between items in `line`.
 
     e.g. ('l', '1', 'c', '2', 'c', '3', 'r')
 
