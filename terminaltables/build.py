@@ -1,6 +1,6 @@
 """Combine cells into rows."""
 
-from terminaltables.width_and_alignment import truncate
+from terminaltables.width_and_alignment import visible_width
 
 
 def combine(line, left, intersect, right):
@@ -68,9 +68,17 @@ def build_border(column_widths, horizontal, left, intersect, right, title=None):
     :return: Prepared border as a tuple of strings.
     :rtype: tuple
     """
+    length = 0
+
+    # Hide title if it doesn't fit.
+    if title and column_widths:
+        length = visible_width(title)
+        if length > sum(column_widths) + len(intersect) * (len(column_widths) - 1):
+            title = None
+
+    # Handle no title.
     if not title or not column_widths or not horizontal:
         return tuple(combine((horizontal * c for c in column_widths), left, intersect, right))
-    title, length = truncate(title, sum(column_widths) + len(intersect) * (len(column_widths) - 1))
 
     # Handle title fitting in the first column.
     if length == column_widths[0]:

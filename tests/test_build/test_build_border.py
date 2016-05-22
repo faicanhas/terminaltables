@@ -72,20 +72,7 @@ def test_first_column_fit(column_widths, left, intersect, right, expected):
     ([9, 5], 'Applications--'),
     ([8, 5], 'Applications-'),
     ([7, 5], 'Applications'),
-    ([6, 5], 'Application'),
-    ([5, 5], 'Applicatio'),
-    ([5, 4], 'Applicati'),
-    ([4, 4], 'Applicat'),
-    ([4, 3], 'Applica'),
-    ([3, 3], 'Applic'),
-    ([3, 2], 'Appli'),
-    ([2, 2], 'Appl'),
-    ([2, 1], 'App'),
-    ([1, 1], 'Ap'),
-    ([1, 0], 'A'),
-    ([0, 0], ''),
-    ([1], 'A'),
-    ([0], ''),
+    ([6, 5], '-----------'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_no_intersect(column_widths, left, right, expected):
@@ -124,9 +111,9 @@ def test_no_intersect(column_widths, left, right, expected):
     ([1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'Applications-+-+-+-'),
     ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'Applications++++++++'),
 
-    ([2, 2, 2, 2], 'Application'),
-    ([1, 1, 1, 1, 1], 'Applicati'),
-    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'Applicati'),
+    ([2, 2, 2, 2], '--+--+--+--'),
+    ([1, 1, 1, 1, 1], '-+-+-+-+-'),
+    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], '+++++++++'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_intersect(column_widths, left, right, expected):
@@ -162,13 +149,8 @@ def test_intersect(column_widths, left, right, expected):
     ([2, 4], '', u'蓝色--'),
     ([1, 4], '', u'蓝色-'),
     ([1, 3], '', u'蓝色'),
-    ([1, 2], '', u'蓝-'),
-    ([1, 1], '', u'蓝'),
-    ([1, 0], '', '-'),
-    ([0, 0], '', ''),
-    ([2], '', u'蓝'),
-    ([1], '', '-'),
-    ([0], '', ''),
+    ([1, 2], '', u'---'),
+    ([2], '', u'--'),
     ([12], '+', u'蓝色--------'),
     ([0, 12], '+', u'蓝色---------'),
     ([12, 0], '+', u'蓝色--------+'),
@@ -183,9 +165,7 @@ def test_intersect(column_widths, left, right, expected):
     ([2, 2, 2, 2], '+', u'蓝色-+--+--'),
     ([1, 1, 1, 1, 1], '+', u'蓝色-+-+-'),
     ([0, 0, 0, 0, 0, 0, 0], '+', u'蓝色++'),
-    ([1, 1], '+', u'蓝-'),
-    ([1, 0], '+', u'蓝'),
-    ([0, 0], '+', '+'),
+    ([1, 1], '+', u'-+-'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_cjk(column_widths, left, intersect, right, expected):
@@ -199,7 +179,7 @@ def test_cjk(column_widths, left, intersect, right, expected):
     """
     if left and right:
         expected = left + expected + right
-    actual = build_border(column_widths, '-', left, intersect, right, title='蓝色')
+    actual = build_border(column_widths, '-', left, intersect, right, title=u'蓝色')
     assert ''.join(actual) == expected
 
 
@@ -222,13 +202,8 @@ def test_cjk(column_widths, left, intersect, right, expected):
     ([2, 4], '', u'معرب--'),
     ([1, 4], '', u'معرب-'),
     ([1, 3], '', u'معرب'),
-    ([1, 2], '', u'معر'),
-    ([1, 1], '', u'مع'),
-    ([1, 0], '', u'م'),
-    ([0, 0], '', ''),
-    ([2], '', u'مع'),
-    ([1], '', u'م'),
-    ([0], '', ''),
+    ([1, 2], '', u'---'),
+    ([2], '', u'--'),
     ([12], '+', u'معرب--------'),
     ([0, 12], '+', u'معرب---------'),
     ([12, 0], '+', u'معرب--------+'),
@@ -243,9 +218,7 @@ def test_cjk(column_widths, left, intersect, right, expected):
     ([2, 2, 2, 2], '+', u'معرب-+--+--'),
     ([1, 1, 1, 1, 1], '+', u'معرب-+-+-'),
     ([0, 0, 0, 0, 0, 0, 0], '+', u'معرب++'),
-    ([1, 1], '+', u'معر'),
-    ([1, 0], '+', u'مع'),
-    ([0, 0], '+', u'م'),
+    ([1, 1], '+', u'-+-'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 def test_rtl(column_widths, left, intersect, right, expected):
@@ -259,7 +232,7 @@ def test_rtl(column_widths, left, intersect, right, expected):
     """
     if left and right:
         expected = left + expected + right
-    actual = build_border(column_widths, '-', left, intersect, right, title='معرب')
+    actual = build_border(column_widths, '-', left, intersect, right, title=u'معرب')
     assert ''.join(actual) == expected
 
 
@@ -282,13 +255,7 @@ def test_rtl(column_widths, left, intersect, right, expected):
     ([2, 4], '', '\x1b[34mTEST\x1b[0m--'),
     ([1, 4], '', '\x1b[34mTEST\x1b[0m-'),
     ([1, 3], '', '\x1b[34mTEST\x1b[0m'),
-    ([1, 2], '', '\x1b[34mTES\x1b[0m'),
-    ([1, 1], '', '\x1b[34mTE\x1b[0m'),
-    ([1, 0], '', '\x1b[34mT\x1b[0m'),
-    ([0, 0], '', '\x1b[34m\x1b[0m'),
-    ([2], '', '\x1b[34mTE\x1b[0m'),
-    ([1], '', '\x1b[34mT\x1b[0m'),
-    ([0], '', '\x1b[34m\x1b[0m'),
+    ([1, 2], '', '---'),
     ([12], '+', '\x1b[34mTEST\x1b[0m--------'),
     ([0, 12], '+', '\x1b[34mTEST\x1b[0m---------'),
     ([12, 0], '+', '\x1b[34mTEST\x1b[0m--------+'),
@@ -303,9 +270,7 @@ def test_rtl(column_widths, left, intersect, right, expected):
     ([2, 2, 2, 2], '+', '\x1b[34mTEST\x1b[0m-+--+--'),
     ([1, 1, 1, 1, 1], '+', '\x1b[34mTEST\x1b[0m-+-+-'),
     ([0, 0, 0, 0, 0, 0, 0], '+', '\x1b[34mTEST\x1b[0m++'),
-    ([1, 1], '+', '\x1b[34mTES\x1b[0m'),
-    ([1, 0], '+', '\x1b[34mTE\x1b[0m'),
-    ([0, 0], '+', '\x1b[34mT\x1b[0m'),
+    ([1, 1], '+', '-+-'),
 ])
 @pytest.mark.parametrize('left,right', [('', ''), ('<', '>')])
 @pytest.mark.parametrize('title', [
