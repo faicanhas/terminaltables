@@ -1,7 +1,7 @@
 """Main table class."""
 
 from terminaltables import width_and_alignment
-from terminaltables.build import build_border
+from terminaltables.build import build_border, build_row
 from terminaltables.terminal_io import terminal_size
 
 
@@ -36,17 +36,17 @@ def join_row(row, left, middle, right):
 class BaseTable(object):
     """Base table class."""
 
-    CHAR_CORNER_LOWER_LEFT = ''
-    CHAR_CORNER_LOWER_RIGHT = ''
-    CHAR_CORNER_UPPER_LEFT = ''
-    CHAR_CORNER_UPPER_RIGHT = ''
-    CHAR_HORIZONTAL = ''
-    CHAR_INTERSECT_BOTTOM = ''
-    CHAR_INTERSECT_CENTER = ''
-    CHAR_INTERSECT_LEFT = ''
-    CHAR_INTERSECT_RIGHT = ''
-    CHAR_INTERSECT_TOP = ''
-    CHAR_VERTICAL = ''
+    CHAR_CORNER_LOWER_LEFT = '+'
+    CHAR_CORNER_LOWER_RIGHT = '+'
+    CHAR_CORNER_UPPER_LEFT = '+'
+    CHAR_CORNER_UPPER_RIGHT = '+'
+    CHAR_HORIZONTAL = '-'
+    CHAR_INTERSECT_BOTTOM = '+'
+    CHAR_INTERSECT_CENTER = '+'
+    CHAR_INTERSECT_LEFT = '+'
+    CHAR_INTERSECT_RIGHT = '+'
+    CHAR_INTERSECT_TOP = '+'
+    CHAR_VERTICAL = '|'
 
     def __init__(self, table_data, title=None):
         """Constructor.
@@ -65,6 +65,59 @@ class BaseTable(object):
         self.outer_border = True
         self.padding_left = 1
         self.padding_right = 1
+
+    def gen_cell_lines(self, row, widths, height):
+        """Combine cells in row and group them into lines with borders.
+
+        Caller is expected to pass yielded lines to ''.join() to combine them into a printable line. Caller must append
+        newline character to the end of joined line.
+
+        In:
+        ['Row One Column One', 'Two', 'Three']
+        Out:
+        [
+            ('|', ' Row One Column One ', '|', ' Two ', '|', ' Three ', '|'),
+        ]
+
+        In:
+        ['Row One\nColumn One', 'Two', 'Three'],
+        Out:
+        [
+            ('|', ' Row One    ', '|', ' Two ', '|', ' Three ', '|'),
+            ('|', ' Column One ', '|', '     ', '|', '       ', '|'),
+        ]
+
+        :param iter row: One row in the table. List of cells.
+        :param iter widths: List of inner widths (no padding) for each column.
+        :param int height: Inner height (no padding) (number of lines) to expand row to.
+
+        :return: Yields lines split into components in a list. Caller must ''.join() line.
+        """
+        cells_in_row = list()
+
+        # Pad and align each cell. Split each cell into lines to support multi-line cells.
+        for i, cell in enumerate(row):
+            align = (self.justify_columns.get(i),)
+            inner_dimensions = (widths[i], height)
+            padding = (self.padding_left, self.padding_right, 0, 0)
+            cells_in_row.append(width_and_alignment.align_and_pad_cell(cell, align, inner_dimensions, padding))
+
+        # Handle empty row (with no cells).
+        if not cells_in_row:
+            yield ()
+            return
+
+        # Combine cells and borders.
+        lines = build_row(
+            cells_in_row,
+            self.CHAR_VERTICAL if self.outer_border else '',
+            self.CHAR_VERTICAL if self.inner_column_border else '',
+            self.CHAR_VERTICAL if self.outer_border else ''
+        )
+
+        # Yield each line.
+        for line in lines:
+            yield line
 
     def column_max_width(self, column_number):
         """Return the maximum width of a column based on the current terminal width.
