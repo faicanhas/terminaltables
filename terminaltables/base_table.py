@@ -152,7 +152,7 @@ class BaseTable(object):
             )))
 
         # Build table body.
-        indexes = range(len(padded_table_data))
+        indexes = range(len(self.table_data))
         for i in indexes:
             row = join_row(
                 padded_table_data[i],
