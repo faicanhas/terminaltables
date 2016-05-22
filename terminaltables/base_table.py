@@ -86,7 +86,7 @@ class BaseTable(object):
         """Return a list of integers representing the widths of each table column without padding."""
         if not self.table_data:
             return list()
-        return width_and_alignment.max_inner_dimensions(self.table_data)[0]
+        return width_and_alignment.max_dimensions(self.table_data)[0]
 
     @property
     def ok(self):  # Too late to change API. # pylint: disable=invalid-name
