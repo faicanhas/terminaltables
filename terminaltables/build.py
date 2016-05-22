@@ -102,7 +102,7 @@ def build_border(column_widths, horizontal, left, intersect, right, title=None):
     return tuple(combine(columns_and_intersects, left, None, right))
 
 
-def build_row(row, left, intersect, right):
+def build_row(row, left, center, right):
     """Combine single or multi-lined cells into a single row of list of lists including borders.
 
     Row must already be padded and extended so each cell has the same number of lines.
@@ -115,7 +115,7 @@ def build_row(row, left, intersect, right):
 
     :param iter row: List of cells for one row.
     :param str left: Left border.
-    :param str intersect: Column separator.
+    :param str center: Column separator.
     :param str right: Right border.
 
     :return: Prepared row as a list of tuple of strings.
@@ -123,7 +123,7 @@ def build_row(row, left, intersect, right):
     """
     combined = list()
     for row_index in range(len(row[0])):
-        combined.append(tuple(combine((c[row_index] for c in row), left, intersect, right)))
+        combined.append(tuple(combine((c[row_index] for c in row), left, center, right)))
     return combined
 
 
