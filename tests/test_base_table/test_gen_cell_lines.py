@@ -42,12 +42,23 @@ def test_no_padding_no_borders():
     assert actual == expected
 
 
+def test_uneven():
+    """Test with row missing cells."""
+    row = ['Row One Column One']
+    table = BaseTable([row])
+    actual = list(table.gen_cell_lines(row, [18, 3, 5], 1))
+    expected = [
+        ('|', ' Row One Column One ', '|', '     ', '|', '       ', '|'),
+    ]
+    assert actual == expected
+
+
 def test_empty_table():
     """Test empty table."""
     row = []
     table = BaseTable([row])
     actual = list(table.gen_cell_lines(row, [], 0))
     expected = [
-        (),
+        ('|', '|'),
     ]
     assert actual == expected

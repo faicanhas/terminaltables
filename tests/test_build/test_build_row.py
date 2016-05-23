@@ -87,3 +87,18 @@ def test_empty():
         ('>', '', '<'),
     ]
     assert actual == expected
+
+
+def test_no_cells():
+    """Test with no cells."""
+    actual = build_row([[]], '>', '|', '<')
+    expected = [
+        ('>', '<'),
+    ]
+    assert actual == expected
+
+    actual = build_row([], '>', '|', '<')
+    expected = [
+        ('>', '<'),
+    ]
+    assert actual == expected
