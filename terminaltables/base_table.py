@@ -5,34 +5,6 @@ from terminaltables.build import build_border, build_row
 from terminaltables.terminal_io import terminal_size
 
 
-def join_row(row, left, middle, right):
-    """Convert a row (list of strings) into a joined string with left and right borders. Supports multi-lines.
-
-    :param iter row: List of strings representing one row.
-    :param str left: Left border.
-    :param str middle: Column separator.
-    :param str right: Right border.
-
-    :return: String representation of a row.
-    :rtype: str
-    """
-    if not row:
-        return left + right
-
-    if not any('\n' in c for c in row):
-        return left + middle.join(row) + right
-
-    # Split cells in the row by newlines. This creates new rows.
-    split_cells = [(c.splitlines() or ['']) + ([''] if c.endswith('\n') else []) for c in row]
-    height = len(split_cells[0])
-
-    # Merge rows into strings.
-    converted_rows = list()
-    for row_number in range(height):
-        converted_rows.append(left + middle.join([c[row_number] for c in split_cells]) + right)
-    return '\n'.join(converted_rows)
-
-
 class BaseTable(object):
     """Base table class."""
 

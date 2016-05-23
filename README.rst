@@ -177,7 +177,7 @@ Added
     * Support for RTL characters (Arabic and Hebrew).
 
 Removed
-    * ``padded_table_data`` property. Moving away from repeated string joining/splitting.
+    * ``padded_table_data`` property and ``join_row()``. Moving away from repeated string joining/splitting.
 
 Fixed
     * ``set_terminal_title()`` Unicode handling on Windows.
