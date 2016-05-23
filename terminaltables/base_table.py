@@ -144,32 +144,6 @@ class BaseTable(object):
         return self.table_width <= terminal_size()[0]
 
     @property
-    def padded_table_data(self):
-        """Return a list of lists of strings. It's self.table_data but with the cells padded with spaces and newlines.
-
-        Most of the work in this class is done here.
-        """
-        if not self.table_data:
-            return list()
-
-        # Set all rows to the same number of columns.
-        max_columns = max(len(r) for r in self.table_data)
-        new_table_data = [r + [''] * (max_columns - len(r)) for r in self.table_data]
-
-        # Pad strings in each cell, and apply text-align/justification.
-        widths = self.column_widths
-        for row in new_table_data:
-            height = max([c.count('\n') for c in row] or [0]) + 1
-            for i in range(len(row)):
-                align = (self.justify_columns.get(i, 'left'),)
-                dimensions = (widths[i], height)
-                padding = (self.padding_left, self.padding_right, 0, 0)
-                cell = '\n'.join(width_and_alignment.align_and_pad_cell(row[i], align, dimensions, padding))
-                row[i] = cell
-
-        return new_table_data
-
-    @property
     def table(self):
         """Return a large string of the entire table ready to be printed to the terminal."""
         widths = [c + self.padding_left + self.padding_right for c in self.column_widths]
